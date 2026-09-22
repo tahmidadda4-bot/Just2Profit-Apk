@@ -1,0 +1,52 @@
+name: Unzip Project
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Find and unzip ZIP
+        run: |
+          set -e
+
+          ZIP=$(find . -maxdepth 1 -type f -name "*.zip" | head -n 1)
+
+          if [ -z "$ZIP" ]; then
+            echo "No ZIP file found"
+            exit 1
+          fi
+
+          echo "Found: $ZIP"
+
+          mkdir -p extracted
+          unzip -o "$ZIP" -d extracted
+
+          ROOT=$(find extracted -mindepth 1 -maxdepth 1 -type d | head -n 1)
+
+          if [ -n "$ROOT" ]; then
+            cp -R "$ROOT"/. .
+          else
+            cp -R extracted/. .
+          fi
+
+          rm -rf extracted
+
+          echo "Project extracted successfully"
+          find . -maxdepth 2 -type d | sort
+
+      - name: Commit extracted files
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Extract Just2Profit project" || echo "Nothing to commit"
+          git push

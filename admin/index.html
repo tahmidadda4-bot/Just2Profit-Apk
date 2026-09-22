@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Just2Profit Admin</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f3f5f7;margin:0}
+.wrap{max-width:1000px;margin:auto;padding:24px}
+.card{background:white;border-radius:14px;padding:18px;margin:12px 0}
+button{padding:10px 16px;border:0;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Just2Profit Admin Panel</h1>
+<div class="card"><h2>Dashboard</h2><p>Users: <span id="users">—</span></p><p>Tasks: <span id="tasks">—</span></p><p>Pending withdrawals: <span id="withdrawals">—</span></p></div>
+<div class="card"><h2>Task Management</h2><p>Task create/edit API will connect here.</p></div>
+<div class="card"><h2>Withdrawal Management</h2><p>Pending requests will be reviewed here.</p></div>
+</div>
+<script>
+const API = localStorage.getItem("J2P_API") || "http://localhost:3000";
+fetch(API + "/api/health").then(r=>r.json()).then(x=>console.log(x)).catch(()=>{});
+</script>
+</body>
+</html>
